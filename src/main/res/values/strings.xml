@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Randroid</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--ActionBar menu-->
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="legal">Legal Notices</string>
+
+    <!--Displayed in a toast when Gmaps v2 is not installed on the device-->
+    <string name="no_maps">Google Maps V2 not available!</string>
+
+    <string name="rollers_coquillages_server">http://www.rollers-coquillages.org</string>
+</resources>
