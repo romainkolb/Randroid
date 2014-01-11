@@ -3,7 +3,6 @@ package org.loutr.randroid.model;
 import android.util.Log;
 import android.util.Xml;
 import com.google.android.gms.maps.model.LatLng;
-import org.loutr.randroid.model.Rando;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import retrofit.converter.ConversionException;
@@ -70,9 +69,9 @@ public class RandoConverter implements Converter {
 	 *
 	 * @param parser
 	 * @return
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 * @throws ParseException
+	 * @throws org.xmlpull.v1.XmlPullParserException
+	 * @throws java.io.IOException
+	 * @throws java.text.ParseException
 	 */
 	private Rando readKml(XmlPullParser parser) throws XmlPullParserException,
             IOException, ParseException {

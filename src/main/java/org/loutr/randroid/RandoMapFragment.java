@@ -14,9 +14,10 @@
 
 package org.loutr.randroid;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.util.TypedValue;
 import com.actionbarsherlock.app.SherlockMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.*;
@@ -26,16 +27,28 @@ import java.util.List;
 
 public class RandoMapFragment extends SherlockMapFragment {
 
-    private static final LatLng PARIS = new LatLng(48.8567, 2.3508);
-    private static final LatLng NOMADES = new LatLng(48.852175, 2.367853);
+    private LatLng paris;
+    //private LatLng nomades;
 
-        private Polyline currentAller;
+    private Polyline currentAller;
     private Polyline currentRetour;
     private Rando currentRando;
+
+    private Marker myLocation;
+    private Marker startingLocation;
+    private Marker pauseLocation;
+
+    private double maxLat;
+    private double minLat;
+    private double maxLon;
+    private double minLon;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        initCoords();
 
         if (getMap() != null) {
             Log.d(((Object) this).getClass().getSimpleName(), "Map ready for use!");
@@ -43,52 +56,96 @@ public class RandoMapFragment extends SherlockMapFragment {
         }
     }
 
-    private void initMap() {
+    private void initCoords() {
+        float lat, lng;
+        TypedValue tv = new TypedValue();
 
-        getMap().addMarker(new MarkerOptions().position(NOMADES).title("Nomades"));
+        getResources().getValue(R.dimen.paris_lat, tv, true);
+        lat = tv.getFloat();
+        getResources().getValue(R.dimen.paris_lng, tv, true);
+        lng = tv.getFloat();
+        paris = new LatLng(lat, lng);
+
+        /*getResources().getValue(R.dimen.nomades_lat, tv, true);
+        lat = tv.getFloat();
+        getResources().getValue(R.dimen.nomades_lng, tv, true);
+        lng = tv.getFloat();
+        nomades = new LatLng(lat, lng);*/
+    }
+
+    private void initMap() {
+        if (paris == null) {
+            initCoords();
+        }
 
         // Move the camera instantly to Paris with a zoom of 5.
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(PARIS, 5));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(paris, 5));
 
         // Zoom in, animating the camera.
         getMap().animateCamera(CameraUpdateFactory.zoomTo(11), 2000, null);
 
+    }
 
+    public void updateLocation(Location location){
+        if(myLocation != null){
+            myLocation.remove();
+        }
+        myLocation = getMap().addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_you_are_here)).title(getString(R.string.myLocation)));
+        getMap().animateCamera(CameraUpdateFactory.newLatLng(myLocation.getPosition()));
     }
 
     public void drawRando(Rando rando) {
-        if (currentAller != null) {
-            currentAller.remove();
-        }
-
-        if (currentRetour != null) {
-            currentRetour.remove();
-        }
+        if (currentAller != null) currentAller.remove();
+        if (currentRetour != null) currentRetour.remove();
+        if(startingLocation != null) startingLocation.remove();
+        if(pauseLocation != null) pauseLocation.remove();
 
         currentRando = rando;
 
-        currentAller = drawSegment(rando.getAller(), 0xc000cc00);
-        currentRetour = drawSegment(rando.getRetour(), 0xc0FF0000);
+        maxLat = Double.MIN_VALUE;
+        minLat = Double.MAX_VALUE;
+        minLon = Double.MAX_VALUE;
+        maxLon = Double.MIN_VALUE;
 
+        currentAller = drawSegment(rando.getAller(), 0xff67c547);
+        currentRetour = drawSegment(rando.getRetour(), 0xffc03639);
+
+        //Draw POIs
+        if(currentAller != null && currentAller.getPoints().size()>0){
+            startingLocation = getMap().addMarker(new MarkerOptions().position(currentAller.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_start)).title(getString(R.string.startingLocation)));
+        }
+        if(currentRetour != null && currentRetour.getPoints().size()>0){
+            pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(getString(R.string.pauseLocation)));
+        }
+
+        //Zoom to rando
+        LatLng maxBound = new LatLng(maxLat+0.005,maxLon+0.005);
+        LatLng minBound = new LatLng(minLat-0.005,minLon-0.005);
+        LatLngBounds randoBounds = LatLngBounds.builder().include(maxBound).include(minBound).build();
+        getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(randoBounds, 0));
     }
 
     private Polyline drawSegment(List<LatLng> segment, int color) {
-        if (segment != null) {
+        if (segment != null && segment.size()>0) {
             LatLng depart;
             LatLng arrivee;
             PolylineOptions po = new PolylineOptions().width(7).color(color);
 
             depart = segment.get(0);
             for (int i = 1; i < segment.size(); i++) {
+
+                if(depart.latitude > maxLat) maxLat = depart.latitude;
+                if(depart.latitude < minLat) minLat = depart.latitude;
+                if(depart.longitude > maxLon) maxLon = depart.longitude;
+                if(depart.longitude < minLon) minLon = depart.longitude;
+
                 arrivee = segment.get(i);
 
                 po.add(depart, arrivee);
 
                 depart = arrivee;
             }
-
             return getMap().addPolyline(po);
-
         }
         return null;
     }
