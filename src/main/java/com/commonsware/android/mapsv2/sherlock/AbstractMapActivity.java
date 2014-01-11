@@ -32,7 +32,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import org.loutr.randroid.R;
 
 public class AbstractMapActivity extends SherlockFragmentActivity {
-    protected static final String TAG_ERROR_DIALOG_FRAGMENT="errorDialog";
+    private static final String TAG_ERROR_DIALOG_FRAGMENT="errorDialog";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

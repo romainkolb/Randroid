@@ -29,7 +29,7 @@ public class ContractFragment<T> extends SherlockFragment {
         contract = null;
     }
 
-    public final T getContract() {
+    protected final T getContract() {
         return (contract);
     }
 

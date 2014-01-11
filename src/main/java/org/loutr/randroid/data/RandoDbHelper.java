@@ -17,10 +17,9 @@ import java.util.List;
 public class RandoDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database
     // version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Rando.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Rando.db";
 
-    private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
@@ -188,7 +187,7 @@ public class RandoDbHelper extends SQLiteOpenHelper {
     }
 
     private class SaveRandosTask extends AsyncTask<Rando, Void, Void> {
-        private RandoListener listener;
+        private final RandoListener listener;
 
         private SQLiteDatabase db;
 
@@ -323,7 +322,7 @@ public class RandoDbHelper extends SQLiteOpenHelper {
 
 
     private class GetAllRandosTask extends AsyncTask<Rando, Void, Void> {
-        private RandoListener listener;
+        private final RandoListener listener;
 
         private Cursor cursor;
 

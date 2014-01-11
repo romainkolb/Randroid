@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * Created by romain on 12/8/13.
  */
-public class RandoConverter implements Converter {
+class RandoConverter implements Converter {
     @Override
     public Object fromBody(TypedInput typedInput, Type type) throws ConversionException {
         try{
@@ -104,11 +104,7 @@ public class RandoConverter implements Converter {
 					String subName = parser.getName();
 					Log.d(this.getClass().getName(), "subtag name : " + subName);
 					if (subName.equals("description")) {
-						if ("Segment 1".equals(readText(parser))) {
-							isAller = true;
-						} else {
-							isAller = false;
-						}
+                        isAller = "Segment 1".equals(readText(parser));
 					} else if (subName.equals("LineString")) {
 
 						currentSegment = readLineString(parser);

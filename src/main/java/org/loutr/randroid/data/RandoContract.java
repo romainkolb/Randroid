@@ -6,7 +6,7 @@ public class RandoContract {
 
 	// To prevent someone from accidentally instantiating the contract class,
 	// give it an empty constructor.
-	public RandoContract() {
+	private RandoContract() {
 	}
 	
 	public static abstract class Rando implements BaseColumns {
