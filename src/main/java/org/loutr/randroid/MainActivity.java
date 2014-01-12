@@ -20,10 +20,9 @@ import org.loutr.randroid.model.RandoManagerFragment;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class MainActivity extends AbstractMapActivity implements RandoManagerFragment.Contract, ActionBar.OnNavigationListener, LocationListener {
+public class MainActivity extends AbstractMapActivity implements RandoManagerFragment.Contract, ActionBar.OnNavigationListener {
 
     private SimpleCursorAdapter adapter;
-    private LocationManager locationManager=null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,6 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(adapter, this);
 
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -82,10 +80,6 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
             setSupportProgressBarIndeterminateVisibility(true);
             getSupportActionBar().setSelectedNavigationItem(0);
             getRandoManagerFragment().resetRandos();
-        } else if (item.getItemId() == R.id.getLocation){
-            //Request location immediately
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-                    0, this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -129,28 +123,6 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     }
 
     private static final DateFormat df = DateFormat.getDateInstance();
-
-    @Override
-    public void onLocationChanged(Location location) {
-        getRandoMapFragment().updateLocation(location);
-        //We no longer need location updates
-        locationManager.removeUpdates(this);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // required for interface, not used
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // required for interface, not used
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // required for interface, not used
-    }
 
     private class RandoViewBinder implements SimpleCursorAdapter.ViewBinder {
 

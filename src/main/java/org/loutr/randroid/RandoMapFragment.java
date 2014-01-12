@@ -34,7 +34,6 @@ public class RandoMapFragment extends SherlockMapFragment {
     private Polyline currentRetour;
     private Rando currentRando;
 
-    private Marker myLocation;
     private Marker startingLocation;
     private Marker pauseLocation;
 
@@ -48,10 +47,8 @@ public class RandoMapFragment extends SherlockMapFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initCoords();
-
         if (getMap() != null) {
-            Log.d(((Object) this).getClass().getSimpleName(), "Map ready for use!");
+            getMap().setMyLocationEnabled(true);
             initMap();
         }
     }
@@ -84,14 +81,6 @@ public class RandoMapFragment extends SherlockMapFragment {
         // Zoom in, animating the camera.
         getMap().animateCamera(CameraUpdateFactory.zoomTo(11), 2000, null);
 
-    }
-
-    public void updateLocation(Location location){
-        if(myLocation != null){
-            myLocation.remove();
-        }
-        myLocation = getMap().addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location.getLongitude())).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_you_are_here)).title(getString(R.string.myLocation)));
-        getMap().animateCamera(CameraUpdateFactory.newLatLng(myLocation.getPosition()));
     }
 
     public void drawRando(Rando rando) {
