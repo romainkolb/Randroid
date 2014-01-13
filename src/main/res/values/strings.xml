@@ -25,5 +25,7 @@
     <string name="resetRandos">Refresh Randos</string>
     <string name="getLocation">Get Location</string>
     <string name="myLocation">You Are Here</string>
+    <string name="randoLocation">Raoul is here</string>
+    <string name="refresh_rando">Refresh Current Rando</string>
 
 </resources>

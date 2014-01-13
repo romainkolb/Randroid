@@ -36,6 +36,7 @@ public class RandoMapFragment extends SherlockMapFragment {
 
     private Marker startingLocation;
     private Marker pauseLocation;
+    private Marker randoLocation;
 
     private double maxLat;
     private double minLat;
@@ -107,6 +108,10 @@ public class RandoMapFragment extends SherlockMapFragment {
             pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(getString(R.string.pauseLocation)));
         }
 
+        if(rando.getLastRandoPosition() != null){
+             randoLocation = getMap().addMarker(new MarkerOptions().position(rando.getLastRandoPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_rando_position)).title(getString(R.string.randoLocation)));
+        }
+
         //Zoom to rando
         LatLng maxBound = new LatLng(maxLat+0.005,maxLon+0.005);
         LatLng minBound = new LatLng(minLat-0.005,minLon-0.005);
@@ -139,4 +144,7 @@ public class RandoMapFragment extends SherlockMapFragment {
         return null;
     }
 
+    public Rando getCurrentRando() {
+        return currentRando;
+    }
 }

@@ -11,6 +11,8 @@ public class Rando {
     private List<LatLng> aller;
     private List<LatLng> retour;
 
+    private LatLng lastRandoPosition;
+
     public Calendar getDate() {
         return date;
     }
@@ -39,6 +41,14 @@ public class Rando {
 
     public void setRetour(List<LatLng> retour) {
         this.retour = retour;
+    }
+
+    public LatLng getLastRandoPosition() {
+        return lastRandoPosition;
+    }
+
+    public void setLastRandoPosition(LatLng lastRandoPosition) {
+        this.lastRandoPosition = lastRandoPosition;
     }
 
     @Override

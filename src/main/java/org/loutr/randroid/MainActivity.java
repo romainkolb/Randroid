@@ -80,6 +80,12 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
             setSupportProgressBarIndeterminateVisibility(true);
             getSupportActionBar().setSelectedNavigationItem(0);
             getRandoManagerFragment().resetRandos();
+        }else if(item.getItemId() == R.id.refresh_rando) {
+            Rando rando = getRandoMapFragment().getCurrentRando();
+            if(rando != null){
+                //TODO : get nbrando from prefs
+                getRandoManagerFragment().getRandoFromWs(rando.getDate(),1);
+            }
         }
 
         return super.onOptionsItemSelected(item);
