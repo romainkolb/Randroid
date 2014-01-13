@@ -12,6 +12,7 @@ public class RandoContract {
 	public static abstract class Rando implements BaseColumns {
         public static final String TABLE_NAME = "rando";
         public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_PAUSE_THOROUGHFARE = "pause_thoroughfare";
     }
 	
 	public static abstract class CheckPoint implements BaseColumns {

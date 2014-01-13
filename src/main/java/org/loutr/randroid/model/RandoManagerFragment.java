@@ -1,6 +1,9 @@
 package org.loutr.randroid.model;
 
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -8,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.commonsware.android.retrofit.ContractFragment;
+import com.google.android.gms.maps.model.LatLng;
 import org.loutr.randroid.R;
 import org.loutr.randroid.data.RandoDbHelper;
 import org.loutr.randroid.data.Utils;
@@ -16,6 +20,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -30,6 +35,8 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
     private final RandoGetter randoGetter = new RandoGetter();
     private final RandoInitializer randoInitializer = new RandoInitializer();
 
+    private static Geocoder geocoder;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -42,6 +49,8 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         rc = restAdapter.create(RollersCoquillagesService.class);
 
         db = new RandoDbHelper(getActivity().getApplicationContext());
+
+        geocoder = new Geocoder(getActivity());
 
         return null;
     }
@@ -112,8 +121,8 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
     private class RandoGetter implements Callback<Rando> {
         @Override
         public void success(Rando rando, Response response) {
-            saveRando(rando);
-            getContract().drawRando(rando);
+            RandoProcessor randoProcessor = new RandoGetterProcessor();
+            Utils.executeAsyncTask(new GeocodeAsync(randoProcessor),rando);
         }
 
         @Override
@@ -126,16 +135,71 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
 
         @Override
         public void success(Rando rando, Response response) {
+            RandoProcessor randoProcessor = new RandoInitializerProcessor();
+            Utils.executeAsyncTask(new GeocodeAsync(randoProcessor),rando);
+        }
+
+        @Override
+        public void failure(RetrofitError retrofitError) {
+            Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
+        }
+    }
+
+    private interface RandoProcessor{
+        void processRando(Rando rando);
+    }
+
+    private class RandoGetterProcessor implements RandoProcessor{
+        @Override
+        public void processRando(Rando rando) {
+            saveRando(rando);
+            getContract().drawRando(rando);
+        }
+    }
+
+    private class RandoInitializerProcessor implements RandoProcessor{
+        @Override
+        public void processRando(Rando rando) {
             //TODO : get nb randos pref
             List<Rando> randos = Utils.getPreviousRandos(rando.getDate(), 5);
             randos.add(0,rando);
             saveRandos(randos);
             getContract().drawRando(rando);
         }
+    }
+
+
+    private class GeocodeAsync extends AsyncTask<Rando, Void, Rando> {
+        private RandoProcessor randoProcessor;
+
+        GeocodeAsync(RandoProcessor randoProcessor){
+            this.randoProcessor = randoProcessor;
+        }
 
         @Override
-        public void failure(RetrofitError retrofitError) {
-            Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
+        protected Rando doInBackground(Rando... params) {
+            Rando rando = params[0];
+
+            if(rando != null && rando.getRetour() != null && rando.getRetour().size()>0){
+                LatLng pause = rando.getRetour().get(0);
+                try {
+                    List<Address> pauseAddress = geocoder.getFromLocation(pause.latitude,pause.longitude,1);
+                    if(pauseAddress != null && pauseAddress.size()>0){
+                        String thoroughfare = pauseAddress.get(0).getThoroughfare();
+                        rando.setPauseThoroughfare(thoroughfare);
+                    }
+                } catch (IOException e) {
+                    Log.e(this.getClass().getSimpleName(),"error while geocoding pause address",e);
+                }
+            }
+
+
+            return rando;
+        }
+
+        @Override
+        public void onPostExecute(Rando rando) {
+           randoProcessor.processRando(rando);
         }
     }
 }

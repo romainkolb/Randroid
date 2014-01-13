@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import com.actionbarsherlock.app.SherlockMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.*;
+import org.loutr.randroid.data.RandoContract;
 import org.loutr.randroid.model.Rando;
 
 import java.util.List;
@@ -105,7 +106,8 @@ public class RandoMapFragment extends SherlockMapFragment {
             startingLocation = getMap().addMarker(new MarkerOptions().position(currentAller.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_start)).title(getString(R.string.startingLocation)));
         }
         if(currentRetour != null && currentRetour.getPoints().size()>0){
-            pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(getString(R.string.pauseLocation)));
+            String title = getString(R.string.pauseLocation)+" : "+ rando.getPauseThoroughfare();
+            pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(title));
         }
 
         if(rando.getLastRandoPosition() != null){

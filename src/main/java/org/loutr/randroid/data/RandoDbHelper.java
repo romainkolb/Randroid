@@ -17,9 +17,10 @@ import java.util.List;
 public class RandoDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database
     // version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "Rando.db";
 
+    private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String REAL_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
@@ -27,7 +28,8 @@ public class RandoDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_RANDOS = "CREATE TABLE "
             + RandoContract.Rando.TABLE_NAME + " ("
             + RandoContract.Rando._ID + " INTEGER PRIMARY KEY,"
-            + RandoContract.Rando.COLUMN_NAME_DATE + INTEGER_TYPE + " UNIQUE"
+            + RandoContract.Rando.COLUMN_NAME_DATE + INTEGER_TYPE + " UNIQUE,"
+            + RandoContract.Rando.COLUMN_NAME_PAUSE_THOROUGHFARE + TEXT_TYPE
             + " )";
 
     private static final String SQL_CREATE_LATLNG = "CREATE TABLE "
@@ -67,7 +69,7 @@ public class RandoDbHelper extends SQLiteOpenHelper {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy
-        // is to simply to discard the data and start over
+        // is to simply discard the data and start over
         db.execSQL(SQL_DELETE_LATLNG);
         db.execSQL(SQL_DELETE_RANDOS);
         onCreate(db);
@@ -112,18 +114,20 @@ public class RandoDbHelper extends SQLiteOpenHelper {
 
             String[] args = {Long.toString(date.getTimeInMillis())};
             Cursor c =
-                    getReadableDatabase().rawQuery("SELECT " + RandoContract.Rando._ID + " FROM " + RandoContract.Rando.TABLE_NAME + " WHERE " + RandoContract.Rando.COLUMN_NAME_DATE + "=?", args);
+                    getReadableDatabase().rawQuery("SELECT " + RandoContract.Rando._ID +","+RandoContract.Rando.COLUMN_NAME_PAUSE_THOROUGHFARE +" FROM " + RandoContract.Rando.TABLE_NAME + " WHERE " + RandoContract.Rando.COLUMN_NAME_DATE + "=?", args);
             c.moveToFirst();
             if (c.isAfterLast()) {
                 return null;
             }
 
             Long randoId = c.getLong(0);
+            String pauseThoroughFare = c.getString(1);
             c.close();
 
             Rando rando = new Rando();
             rando.setDate(date);
             rando.setId(randoId);
+            rando.setPauseThoroughfare(pauseThoroughFare);
 
             rando.setAller(getCheckPointsByRandoAndSegment(rando, 1));
             rando.setRetour(getCheckPointsByRandoAndSegment(rando, 2));
@@ -222,6 +226,7 @@ public class RandoDbHelper extends SQLiteOpenHelper {
                         ContentValues values = new ContentValues();
                         values.put(RandoContract.Rando.COLUMN_NAME_DATE, rando.getDate()
                                 .getTimeInMillis());
+                        values.put(RandoContract.Rando.COLUMN_NAME_PAUSE_THOROUGHFARE,rando.getPauseThoroughfare());
 
                         long newRowId = getWritableDatabase().insert(RandoContract.Rando.TABLE_NAME, null, values);
                         rando.setId(newRowId);
@@ -315,7 +320,8 @@ public class RandoDbHelper extends SQLiteOpenHelper {
     // you will actually use after this query.
     private static final String[] GET_RANDO_PROJECTION = {
             RandoContract.Rando._ID,
-            RandoContract.Rando.COLUMN_NAME_DATE};
+            RandoContract.Rando.COLUMN_NAME_DATE,
+            RandoContract.Rando.COLUMN_NAME_PAUSE_THOROUGHFARE};
 
     // How you want the results sorted in the resulting Cursor
     private static final String GET_ALL_RANDOS_SORT_ORDER = RandoContract.Rando.COLUMN_NAME_DATE + " DESC";

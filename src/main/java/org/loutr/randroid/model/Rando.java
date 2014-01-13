@@ -11,6 +11,11 @@ public class Rando {
     private List<LatLng> aller;
     private List<LatLng> retour;
 
+    /**
+     * the street name of the pause location, retrieved via geocoding
+     */
+    private String pauseThoroughfare;
+
     private LatLng lastRandoPosition;
 
     public Calendar getDate() {
@@ -73,5 +78,13 @@ public class Rando {
         Rando other = (Rando) o;
 
         return other.getDate() != null && other.getDate().equals(this.getDate());
+    }
+
+    public String getPauseThoroughfare() {
+        return pauseThoroughfare;
+    }
+
+    public void setPauseThoroughfare(String pauseThoroughfare) {
+        this.pauseThoroughfare = pauseThoroughfare;
     }
 }

@@ -15,8 +15,9 @@
 
     <!--Map marker titles-->
     <string name="startingLocation">Start</string>
-
     <string name="pauseLocation">Pause</string>
+    <string name="myLocation">You Are Here</string>
+    <string name="randoLocation">Raoul is here</string>
 
     <!--Displayed in a toast when Gmaps v2 is not installed on the device-->
     <string name="no_maps">Google Maps V2 not available!</string>
@@ -24,8 +25,7 @@
     <string name="rollers_coquillages_server">http://www.rollers-coquillages.org</string>
     <string name="resetRandos">Refresh Randos</string>
     <string name="getLocation">Get Location</string>
-    <string name="myLocation">You Are Here</string>
-    <string name="randoLocation">Raoul is here</string>
     <string name="refresh_rando">Refresh Current Rando</string>
 
+    <string name="icons_license">Map Icons by : Maps Icons Collection http://mapicons.nicolasmollet.com</string>
 </resources>
