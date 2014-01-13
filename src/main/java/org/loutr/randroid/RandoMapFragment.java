@@ -106,8 +106,12 @@ public class RandoMapFragment extends SherlockMapFragment {
             startingLocation = getMap().addMarker(new MarkerOptions().position(currentAller.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_start)).title(getString(R.string.startingLocation)));
         }
         if(currentRetour != null && currentRetour.getPoints().size()>0){
-            String title = getString(R.string.pauseLocation)+" : "+ rando.getPauseThoroughfare();
-            pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(title));
+            StringBuilder title = new StringBuilder(getString(R.string.pauseLocation));
+            if(rando.getPauseThoroughfare() != null && rando.getPauseThoroughfare().length()>0){
+                title.append(" : ");
+                title.append(rando.getPauseThoroughfare());
+            }
+            pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(title.toString()));
         }
 
         if(rando.getLastRandoPosition() != null){
