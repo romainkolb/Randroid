@@ -14,14 +14,11 @@
 
 package org.loutr.randroid;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import com.actionbarsherlock.app.SherlockMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.*;
-import org.loutr.randroid.data.RandoContract;
 import org.loutr.randroid.model.Rando;
 
 import java.util.List;
