@@ -2,14 +2,17 @@ package org.loutr.randroid;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.commonsware.android.mapsv2.sherlock.AbstractMapActivity;
@@ -23,6 +26,7 @@ import java.util.Calendar;
 public class MainActivity extends AbstractMapActivity implements RandoManagerFragment.Contract, ActionBar.OnNavigationListener {
 
     private SimpleCursorAdapter adapter;
+    private MenuItem refreshItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,14 +66,21 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
         if (randoManagerFragment != null) {
             if (getSupportActionBar().getNavigationItemCount() == 0) {
                 //initialize navigation dropdown
-                setSupportProgressBarIndeterminateVisibility(true);
                 randoManagerFragment.initRandoList();
             }
         }
     }
 
     @Override
-    public void onDestroy(){
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean result = super.onCreateOptionsMenu(menu);
+        //Grab a reference to refresh menu item
+        refreshItem = menu.findItem(R.id.refresh_rando);
+        return result;
+    }
+
+    @Override
+    public void onDestroy() {
         adapter.swapCursor(null);
         super.onDestroy();
     }
@@ -77,14 +88,15 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.reset_randos) {
-            setSupportProgressBarIndeterminateVisibility(true);
+            toggleRefresh(true);
             getSupportActionBar().setSelectedNavigationItem(0);
             getRandoManagerFragment().resetRandos();
-        }else if(item.getItemId() == R.id.refresh_rando) {
+        } else if (item.getItemId() == R.id.refresh_rando) {
             Rando rando = getRandoMapFragment().getCurrentRando();
-            if(rando != null){
+            if (rando != null) {
                 //TODO : get nbrando from prefs
-                getRandoManagerFragment().getRandoFromWs(rando.getDate(),1);
+                toggleRefresh(true);
+                getRandoManagerFragment().getRandoFromWs(rando.getDate(), 1);
             }
         }
 
@@ -93,11 +105,10 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
 
     @Override
     public void drawRando(Rando rando) {
-        //Loading done, let's hide the loading indicator
-        setSupportProgressBarIndeterminateVisibility(false);
         if (rando != null) {
             getRandoMapFragment().drawRando(rando);
         }
+        toggleRefresh(false);
     }
 
     @Override
@@ -107,6 +118,8 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        toggleRefresh(true);
+
         Cursor c = adapter.getCursor();
         c.moveToPosition(itemPosition);
         long dateMs = c.getLong(c.getColumnIndexOrThrow(RandoContract.Rando.COLUMN_NAME_DATE));
@@ -117,6 +130,27 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
         getRandoManagerFragment().getRandoFromDb(date);
 
         return true;
+    }
+
+
+    private void toggleRefresh(boolean enable) {
+        if(refreshItem != null){
+        if (enable && refreshItem.getActionView() == null) {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+
+            Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_refresh);
+            rotation.setRepeatCount(Animation.INFINITE);
+            iv.startAnimation(rotation);
+
+            refreshItem.setActionView(iv);
+        } else {
+            if (refreshItem.getActionView() != null) {
+                refreshItem.getActionView().clearAnimation();
+                refreshItem.setActionView(null);
+            }
+        }
+        }
     }
 
 

@@ -2,7 +2,7 @@
 
     <item android:id="@+id/refresh_rando"
           android:title="@string/refresh_rando"
-          android:icon="@drawable/ic_menu_refresh"
+          android:icon="@drawable/ic_action_refresh"
           android:showAsAction="ifRoom"/>
 
     <item android:id="@+id/reset_randos"
