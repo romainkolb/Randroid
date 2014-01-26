@@ -12,6 +12,7 @@
     <string name="help">Help</string>
     <string name="about">About</string>
     <string name="legal">Legal Notices</string>
+    <string name="settings">Settings</string>
 
     <!--Map marker titles-->
     <string name="startingLocation">Start</string>

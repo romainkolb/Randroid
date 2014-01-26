@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+            android:fragment="com.commonsware.android.StockPreferenceFragment"
+            android:summary="@string/generalPrefsSummary"
+            android:title="@string/generalPrefsTitle">
+        <extra
+                android:name="resource"
+                android:value="general_prefs"/>
+    </header>
+</preference-headers>

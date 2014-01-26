@@ -1,6 +1,7 @@
 package org.loutr.randroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -60,14 +61,33 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume(){
+        super.onResume();
+
         RandoManagerFragment randoManagerFragment = getRandoManagerFragment();
+
         if (randoManagerFragment != null) {
-            if (getSupportActionBar().getNavigationItemCount() == 0) {
-                //initialize navigation dropdown
-                randoManagerFragment.initRandoList();
+            if(getRandoMapFragment() != null) {
+                getRandoMapFragment().setMyLocationEnabled(getRandoManagerFragment().isDisplayGPSOverlay());
             }
+
+            if (getSupportActionBar().getNavigationItemCount() == 0) {
+                //Rando list not initialized yet
+                toggleRefresh(true);
+                if(randoManagerFragment.isRefreshOnStartup()){
+                    randoManagerFragment.resetRandos();
+                }else{
+                    //initialize navigation dropdown
+                    randoManagerFragment.initRandoList();
+                }
+            }else{
+                //Refresh rando list if the user has modified the nbRandos pref
+                if(getRandoManagerFragment().getNbRandos() != getSupportActionBar().getNavigationItemCount()){
+                    toggleRefresh(true);
+                    randoManagerFragment.resetRandos();
+                }
+            }
+
         }
     }
 
@@ -88,16 +108,12 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.reset_randos) {
-            toggleRefresh(true);
-            getSupportActionBar().setSelectedNavigationItem(0);
-            getRandoManagerFragment().resetRandos();
+            resetRandos();
         } else if (item.getItemId() == R.id.refresh_rando) {
-            Rando rando = getRandoMapFragment().getCurrentRando();
-            if (rando != null) {
-                //TODO : get nbrando from prefs
-                toggleRefresh(true);
-                getRandoManagerFragment().getRandoFromWs(rando.getDate(), 1);
-            }
+            refreshCurrentRando();
+        } else if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(this, Preferences.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -133,23 +149,37 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     }
 
 
-    private void toggleRefresh(boolean enable) {
-        if(refreshItem != null){
-        if (enable && refreshItem.getActionView() == null) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+    private void resetRandos() {
+        toggleRefresh(true);
+        getSupportActionBar().setSelectedNavigationItem(0);
+        getRandoManagerFragment().resetRandos();
+    }
 
-            Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_refresh);
-            rotation.setRepeatCount(Animation.INFINITE);
-            iv.startAnimation(rotation);
-
-            refreshItem.setActionView(iv);
-        } else {
-            if (refreshItem.getActionView() != null) {
-                refreshItem.getActionView().clearAnimation();
-                refreshItem.setActionView(null);
-            }
+    private void refreshCurrentRando() {
+        Rando rando = getRandoMapFragment().getCurrentRando();
+        if (rando != null) {
+            toggleRefresh(true);
+            getRandoManagerFragment().getRandoFromWs(rando.getDate());
         }
+    }
+
+    private void toggleRefresh(boolean enable) {
+        if (refreshItem != null) {
+            if (enable && refreshItem.getActionView() == null) {
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
+
+                Animation rotation = AnimationUtils.loadAnimation(this, R.anim.clockwise_refresh);
+                rotation.setRepeatCount(Animation.INFINITE);
+                iv.startAnimation(rotation);
+
+                refreshItem.setActionView(iv);
+            } else {
+                if (refreshItem.getActionView() != null) {
+                    refreshItem.getActionView().clearAnimation();
+                    refreshItem.setActionView(null);
+                }
+            }
         }
     }
 

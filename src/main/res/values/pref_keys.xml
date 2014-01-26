@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="prefKeyRefreshOnStartup">prefKeyRefreshOnStartup</string>
+        <string name="prefKeyNbRandos">prefKeyNbRandos</string>
+        <string name="prefKeyGPSOverlay">prefKeyGPSOverlay</string>
+</resources>

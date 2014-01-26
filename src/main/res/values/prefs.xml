@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="generalPrefsTitle">General</string>
+    <string name="generalPrefsSummary">General Preferences</string>
+
+    <string name="prefRefreshOnStartupTitle">Refresh on startup</string>
+    <string name="prefRefreshOnStartupSummary">Refresh the rando list on startup</string>
+
+    <string name="prefNbRandosTitle">Rando list size</string>
+    <string name="prefNbRandosSummary">How many randos should be displayed in the dropdown list</string>
+
+    <string name="prefGPSOverlayTitle">Enable Location Overlay</string>
+    <string name="prefGPSOverlaySummary">Display the device location on the map</string>
+
+    <integer name="defaultNbRandos">5</integer>
+    <integer name="defaultNbPositions">1</integer>
+    <bool name="defaultRefreshOnStartup">false</bool>
+    <bool name="defaultGPSOverlay">true</bool>
+</resources>

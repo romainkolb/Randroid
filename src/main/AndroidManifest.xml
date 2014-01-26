@@ -37,8 +37,12 @@
 
         </activity>
 
-        <activity android:name="com.commonsware.android.mapsv2.basic.LegalNoticesActivity"
-                  android:label="@string/legal"/>
+        <activity
+                android:name="com.commonsware.android.mapsv2.basic.LegalNoticesActivity"
+                android:label="@string/legal"/>
+
+        <activity android:name="org.loutr.randroid.Preferences">
+        </activity>
 
         <meta-data
                 android:name="com.google.android.gms.version"

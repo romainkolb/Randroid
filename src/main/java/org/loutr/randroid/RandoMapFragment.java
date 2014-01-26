@@ -1,14 +1,5 @@
 /***
- Copyright (c) 2013 CommonsWare, LLC
- Licensed under the Apache License, Version 2.0 (the "License"); you may not
- use this file except in compliance with the License. You may obtain a copy
- of the License at http://www.apache.org/licenses/LICENSE-2.0. Unless required
- by applicable law or agreed to in writing, software distributed under the
- License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
- OF ANY KIND, either express or implied. See the License for the specific
- language governing permissions and limitations under the License.
-
- From _The Busy Coder's Guide to Android Development_
+ Based on code from _The Busy Coder's Guide to Android Development_
  http://commonsware.com/Android
  */
 
@@ -26,7 +17,6 @@ import java.util.List;
 public class RandoMapFragment extends SherlockMapFragment {
 
     private LatLng paris;
-    //private LatLng nomades;
 
     private Polyline currentAller;
     private Polyline currentRetour;
@@ -41,15 +31,23 @@ public class RandoMapFragment extends SherlockMapFragment {
     private double maxLon;
     private double minLon;
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         if (getMap() != null) {
-            getMap().setMyLocationEnabled(true);
             initMap();
         }
+    }
+
+    @Override
+    public void onPause() {
+        getMap().setMyLocationEnabled(false);
+        super.onPause();
+    }
+
+    public void setMyLocationEnabled(boolean enabled){
+        getMap().setMyLocationEnabled(enabled);
     }
 
     private void initCoords() {
@@ -61,12 +59,6 @@ public class RandoMapFragment extends SherlockMapFragment {
         getResources().getValue(R.dimen.paris_lng, tv, true);
         lng = tv.getFloat();
         paris = new LatLng(lat, lng);
-
-        /*getResources().getValue(R.dimen.nomades_lat, tv, true);
-        lat = tv.getFloat();
-        getResources().getValue(R.dimen.nomades_lng, tv, true);
-        lng = tv.getFloat();
-        nomades = new LatLng(lat, lng);*/
     }
 
     private void initMap() {
@@ -85,8 +77,9 @@ public class RandoMapFragment extends SherlockMapFragment {
     public void drawRando(Rando rando) {
         if (currentAller != null) currentAller.remove();
         if (currentRetour != null) currentRetour.remove();
-        if(startingLocation != null) startingLocation.remove();
-        if(pauseLocation != null) pauseLocation.remove();
+        if (startingLocation != null) startingLocation.remove();
+        if (pauseLocation != null) pauseLocation.remove();
+        if (randoLocation != null) randoLocation.remove();
 
         currentRando = rando;
 
@@ -99,31 +92,31 @@ public class RandoMapFragment extends SherlockMapFragment {
         currentRetour = drawSegment(rando.getRetour(), 0xffc03639);
 
         //Draw POIs
-        if(currentAller != null && currentAller.getPoints().size()>0){
+        if (currentAller != null && currentAller.getPoints().size() > 0) {
             startingLocation = getMap().addMarker(new MarkerOptions().position(currentAller.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_start)).title(getString(R.string.startingLocation)));
         }
-        if(currentRetour != null && currentRetour.getPoints().size()>0){
+        if (currentRetour != null && currentRetour.getPoints().size() > 0) {
             StringBuilder title = new StringBuilder(getString(R.string.pauseLocation));
-            if(rando.getPauseThoroughfare() != null && rando.getPauseThoroughfare().length()>0){
+            if (rando.getPauseThoroughfare() != null && rando.getPauseThoroughfare().length() > 0) {
                 title.append(" : ");
                 title.append(rando.getPauseThoroughfare());
             }
             pauseLocation = getMap().addMarker(new MarkerOptions().position(currentRetour.getPoints().get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_pause)).title(title.toString()));
         }
 
-        if(rando.getLastRandoPosition() != null){
-             randoLocation = getMap().addMarker(new MarkerOptions().position(rando.getLastRandoPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_rando_position)).title(getString(R.string.randoLocation)));
+        if (rando.getLastRandoPosition() != null) {
+            randoLocation = getMap().addMarker(new MarkerOptions().position(rando.getLastRandoPosition()).icon(BitmapDescriptorFactory.fromResource(R.drawable.poi_rando_position)).title(getString(R.string.randoLocation)));
         }
 
         //Zoom to rando
-        LatLng maxBound = new LatLng(maxLat+0.005,maxLon+0.005);
-        LatLng minBound = new LatLng(minLat-0.005,minLon-0.005);
+        LatLng maxBound = new LatLng(maxLat + 0.005, maxLon + 0.005);
+        LatLng minBound = new LatLng(minLat - 0.005, minLon - 0.005);
         LatLngBounds randoBounds = LatLngBounds.builder().include(maxBound).include(minBound).build();
         getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(randoBounds, 0));
     }
 
     private Polyline drawSegment(List<LatLng> segment, int color) {
-        if (segment != null && segment.size()>0) {
+        if (segment != null && segment.size() > 0) {
             LatLng depart;
             LatLng arrivee;
             PolylineOptions po = new PolylineOptions().width(7).color(color);
@@ -131,10 +124,10 @@ public class RandoMapFragment extends SherlockMapFragment {
             depart = segment.get(0);
             for (int i = 1; i < segment.size(); i++) {
 
-                if(depart.latitude > maxLat) maxLat = depart.latitude;
-                if(depart.latitude < minLat) minLat = depart.latitude;
-                if(depart.longitude > maxLon) maxLon = depart.longitude;
-                if(depart.longitude < minLon) minLon = depart.longitude;
+                if (depart.latitude > maxLat) maxLat = depart.latitude;
+                if (depart.latitude < minLat) minLat = depart.latitude;
+                if (depart.longitude > maxLon) maxLon = depart.longitude;
+                if (depart.longitude < minLon) minLon = depart.longitude;
 
                 arrivee = segment.get(i);
 

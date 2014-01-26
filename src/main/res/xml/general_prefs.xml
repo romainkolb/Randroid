@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+            android:defaultValue="@bool/defaultRefreshOnStartup"
+            android:key="@string/prefKeyRefreshOnStartup"
+            android:summary="@string/prefRefreshOnStartupSummary"
+            android:title="@string/prefRefreshOnStartupTitle"/>
+
+    <ListPreference
+            android:defaultValue="@integer/defaultNbRandos"
+            android:dialogTitle="@string/prefNbRandosTitle"
+            android:entries="@array/prefNbRandosValues"
+            android:entryValues="@array/prefNbRandosValues"
+            android:key="@string/prefKeyNbRandos"
+            android:summary="@string/prefNbRandosSummary"
+            android:title="@string/prefNbRandosTitle"/>
+
+    <CheckBoxPreference
+            android:defaultValue="@bool/defaultGPSOverlay"
+            android:key="@string/prefKeyGPSOverlay"
+            android:summary="@string/prefGPSOverlaySummary"
+            android:title="@string/prefGPSOverlayTitle"/>
+</PreferenceScreen>

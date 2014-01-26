@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="generalPrefsTitle">Général</string>
+    <string name="generalPrefsSummary">Réglages généraux</string>
+
+    <string name="prefRefreshOnStartupTitle">Rafraîchir au démarrage</string>
+    <string name="prefRefreshOnStartupSummary">Rafraîchir la liste des randos au démarrage de l\'application</string>
+
+    <string name="prefNbRandosTitle">Nombre de randos</string>
+    <string name="prefNbRandosSummary">Combien de randos afficher dans le menu déroulant</string>
+
+    <string name="prefGPSOverlayTitle">Activer la localisation GPS</string>
+    <string name="prefGPSOverlaySummary">Afficher la localisation GPS du terminal sur la carte</string>
+
+    <integer name="defaultNbRandos">5</integer>
+    <integer name="defaultNbPositions">1</integer>
+    <bool name="defaultRefreshOnStartup">false</bool>
+    <bool name="defaultGPSOverlay">true</bool>
+</resources>
