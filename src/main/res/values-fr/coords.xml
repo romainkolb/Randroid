@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="paris_lat" type="dimen" format="float">48.8567</item>
-    <item name="paris_lng" type="dimen" format="float">2.3508</item>
-
-    <item name="nomades_lat" type="dimen" format="float">48.852175</item>
-    <item name="nomades_lng" type="dimen" format="float">2.367853</item>
-</resources>
