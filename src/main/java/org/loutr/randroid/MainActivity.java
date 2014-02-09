@@ -31,7 +31,6 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
 
