@@ -1,9 +1,9 @@
 package org.loutr.randroid.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.List;
-
-import com.google.android.gms.maps.model.LatLng;
 
 public class Rando {
     private Long id;

@@ -3,7 +3,6 @@ package org.loutr.randroid.model;
 import android.util.Log;
 import android.util.Xml;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import retrofit.converter.ConversionException;

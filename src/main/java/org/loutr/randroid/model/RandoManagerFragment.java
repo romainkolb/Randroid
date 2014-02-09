@@ -1,6 +1,5 @@
 package org.loutr.randroid.model;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Address;
