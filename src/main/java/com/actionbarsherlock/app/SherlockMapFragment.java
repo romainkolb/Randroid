@@ -1,3 +1,8 @@
+/***
+ *
+ * (https://github.com/commonsguy/cw-omnibus/blob/f9ca6bb6543e371d614d8eef8764d85ab1c349ef/MapsV2/Sherlock/src/com/actionbarsherlock/app/SherlockMapFragment.java)
+ */
+
 package com.actionbarsherlock.app;
 
 import android.app.Activity;
