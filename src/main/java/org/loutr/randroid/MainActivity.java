@@ -130,6 +130,11 @@ public class MainActivity extends AbstractMapActivity implements RandoManagerFra
     }
 
     @Override
+    public void cancelProgress() {
+        toggleRefresh(false);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         toggleRefresh(true);
 

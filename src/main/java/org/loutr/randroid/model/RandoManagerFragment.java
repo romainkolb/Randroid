@@ -119,10 +119,15 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         getContract().updateRandoCursor(cursor);
     }
 
+    /**
+     * Must be implemented by the Activity
+     */
     public interface Contract {
         void drawRando(Rando rando);
 
         void updateRandoCursor(Cursor cursor);
+
+        void cancelProgress();
     }
 
     private class RandoGetter implements Callback<Rando> {
@@ -135,7 +140,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         @Override
         public void failure(RetrofitError retrofitError) {
             Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
-            toastError(retrofitError);
+            processRetrofitError(retrofitError);
         }
     }
 
@@ -150,7 +155,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         @Override
         public void failure(RetrofitError retrofitError) {
             Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
-            toastError(retrofitError);
+            processRetrofitError(retrofitError);
         }
     }
 
@@ -234,7 +239,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
     }
 
 
-    private void toastError(RetrofitError retrofitError){
+    private void processRetrofitError(RetrofitError retrofitError){
         if(retrofitError != null){
             String errorMessage;
         if(retrofitError.isNetworkError()){
@@ -244,5 +249,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         }
              Toast.makeText(getActivity(),errorMessage,Toast.LENGTH_SHORT).show();
         }
+
+        getContract().cancelProgress();
     }
 }
