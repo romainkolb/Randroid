@@ -23,6 +23,10 @@
     <!--Displayed in a toast when Gmaps v2 is not installed on the device-->
     <string name="no_maps">Google Maps V2 not available!</string>
 
+    <!--Download error-->
+    <string name="network_error">Couldn't connect to server, please check your internet connection</string>
+    <string name="read_error">Couldn't download the Rando (%1$s)</string>
+
     <string name="rollers_coquillages_server">http://www.rollers-coquillages.org</string>
     <string name="resetRandos">Refresh Randos</string>
     <string name="getLocation">Get Location</string>

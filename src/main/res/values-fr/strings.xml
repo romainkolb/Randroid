@@ -22,6 +22,10 @@
     <!--Displayed in a toast when Gmaps v2 is not installed on the device-->
     <string name="no_maps">Google Maps V2 non disponible!</string>
 
+    <!--Download error-->
+    <string name="network_error">Connexion échouée, êtes-vous connecté à internet ?</string>
+    <string name="read_error">Impossible de télécharger la Rando (%1$s)</string>
+
     <string name="rollers_coquillages_server">http://www.rollers-coquillages.org</string>
     <string name="resetRandos">Réinitialiser les randos</string>
     <string name="refresh_rando">Rafraîchir la rando</string>

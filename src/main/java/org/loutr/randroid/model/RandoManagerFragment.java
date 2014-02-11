@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.commonsware.android.retrofit.ContractFragment;
 import com.google.android.gms.maps.model.LatLng;
 import org.loutr.randroid.R;
@@ -134,6 +135,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         @Override
         public void failure(RetrofitError retrofitError) {
             Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
+            toastError(retrofitError);
         }
     }
 
@@ -148,6 +150,7 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
         @Override
         public void failure(RetrofitError retrofitError) {
             Log.e(((Object) this).getClass().getSimpleName(), "Exception from Retrofit request to Roller&Coquillages", retrofitError);
+            toastError(retrofitError);
         }
     }
 
@@ -228,5 +231,18 @@ public class RandoManagerFragment extends ContractFragment<RandoManagerFragment.
     public boolean isDisplayGPSOverlay(){
         boolean def = getResources().getBoolean(R.bool.defaultGPSOverlay);
         return prefs.getBoolean(getString(R.string.prefKeyGPSOverlay),def);
+    }
+
+
+    private void toastError(RetrofitError retrofitError){
+        if(retrofitError != null){
+            String errorMessage;
+        if(retrofitError.isNetworkError()){
+            errorMessage = getResources().getString(R.string.network_error);
+        }else{
+            errorMessage = String.format(getResources().getString(R.string.read_error),retrofitError.getLocalizedMessage());
+        }
+             Toast.makeText(getActivity(),errorMessage,Toast.LENGTH_SHORT).show();
+        }
     }
 }
